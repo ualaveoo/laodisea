@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>La Odisea — Episodio 1</title>
+<style>
+:root{--gold:#f6c453;--ink:#102033;--cream:#fff6df;--blue:#2354a4;--danger:#e05368;--safe:#f7f0df}
+*{box-sizing:border-box} html,body{margin:0;height:100%;background:#07111e;color:#fff;font-family:Trebuchet MS,Arial,sans-serif;overflow:hidden}
+button{font:inherit}
+#app{height:100%;position:relative;background:#07111e}
+.screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;overflow:hidden}
+.screen.active{display:flex}
+#cover{background:linear-gradient(180deg,rgba(5,17,34,.18),rgba(5,17,34,.78)),url('assets/portada.webp') center/cover no-repeat}
+.cover-card{width:min(92vw,760px);padding:28px 30px;border-radius:24px;background:rgba(5,16,31,.76);backdrop-filter:blur(8px);border:2px solid rgba(246,196,83,.55);box-shadow:0 25px 70px #0008;text-align:center}
+h1{font-family:Georgia,serif;font-size:clamp(44px,7vw,88px);margin:0;color:#ffe39b;letter-spacing:.04em;text-shadow:0 4px 14px #0009}
+.subtitle{font-size:clamp(16px,2vw,22px);margin:8px 0 22px;color:#f8efd9}
+.primary{border:0;border-radius:14px;padding:14px 24px;background:linear-gradient(#ffd875,#e7a92a);color:#1f190a;font-weight:800;box-shadow:0 6px 0 #8a5b09;cursor:pointer;min-width:220px}
+.primary:active{transform:translateY(3px);box-shadow:0 3px 0 #8a5b09}
+.small{font-size:14px;opacity:.88;margin-top:16px}
+.audio-controls{position:absolute;right:14px;top:14px;z-index:20;display:flex;gap:8px}
+.icon-btn{width:46px;height:46px;border-radius:50%;border:1px solid #ffffff55;background:#07111ecc;color:#fff;cursor:pointer;font-size:21px}
+#intro{background:#000;flex-direction:column}
+#intro video{width:100%;height:100%;object-fit:contain;background:#000}
+.skip{position:absolute;right:20px;bottom:20px;z-index:5;border:1px solid #fff8;background:#000a;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+#episode{background:radial-gradient(circle at 50% 30%,#91d9df 0,#2e8e83 32%,#163d42 72%,#081a25 100%)}
+.episode-card{width:min(92vw,900px);background:#fff8e9;color:#1b2c33;border-radius:28px;padding:28px;display:grid;grid-template-columns:minmax(220px,34%) 1fr;gap:24px;border:4px solid #d7a44d;box-shadow:0 20px 60px #0007}
+.episode-card img{width:100%;max-height:440px;object-fit:contain;align-self:end}
+.episode-copy h2{font:700 clamp(34px,5vw,58px) Georgia,serif;color:#264b69;margin:0 0 5px}.episode-copy h3{margin:0 0 18px;color:#9d6c16;font-size:24px}.episode-copy p{font-size:18px;line-height:1.42}.legend{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0}.legend span{padding:10px 12px;background:#f2e5c7;border-radius:12px;font-weight:700}.lotusDot{color:#d4456e}.molyDot{color:#2a8d59}
+#game{background:#163f4a;align-items:stretch;justify-content:stretch}
+#gameWrap{position:relative;width:100%;height:100%;display:grid;place-items:center;background:#07111e}
+canvas{display:block;max-width:100%;max-height:100%;aspect-ratio:16/9;background:#91c979;box-shadow:0 0 0 2px #ffffff22}
+#hud{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:min(94vw,1120px);display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:8;text-shadow:0 2px 4px #000b;font-weight:800;font-size:18px}
+.hudbox{background:#061a2abb;border:1px solid #fff4;border-radius:14px;padding:9px 13px;min-width:160px;text-align:center}
+#message{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#061a2ae8;border:2px solid #f6c453;border-radius:20px;padding:18px 24px;text-align:center;z-index:9;display:none;max-width:80%;font-weight:800;font-size:24px}
+#touch{position:absolute;inset:auto 0 10px 0;display:none;justify-content:space-between;padding:0 16px;z-index:10;pointer-events:none}.dpad{width:160px;height:120px;position:relative;pointer-events:auto}.dpad button{position:absolute;width:50px;height:50px;border:1px solid #fff7;border-radius:14px;background:#061a2acc;color:#fff;font-size:24px}.up{left:55px;top:0}.down{left:55px;bottom:0}.left{left:0;top:35px}.right{right:0;top:35px}
+#treasure{background:radial-gradient(circle,#275b63 0,#112d3e 48%,#06111d 100%)}
+.treasure-card{width:min(92vw,720px);text-align:center;padding:34px;border-radius:26px;border:3px solid #e5b657;background:#102436;box-shadow:0 20px 70px #0009}.chest{font-size:92px;filter:drop-shadow(0 10px 8px #0008)}.treasure-card h2{font:700 48px Georgia,serif;color:#ffe29b;margin:10px}.treasure-card h3{font-size:30px;margin:12px}.treasure-card p{font-size:18px;line-height:1.4;color:#e7edf4}
+#finalscore{color:#f6c453;font-size:22px;font-weight:800}
+@media(max-width:700px){.episode-card{grid-template-columns:1fr;padding:18px}.episode-card img{display:none}.episode-copy p{font-size:16px}#touch{display:flex}.hudbox{min-width:0;font-size:14px;padding:7px 9px}.audio-controls{top:8px;right:8px}.icon-btn{width:40px;height:40px}}
+@media(hover:none),(pointer:coarse){#touch{display:flex}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="audio-controls">
+    <button id="musicBtn" class="icon-btn" title="Música">🎵</button>
+    <button id="soundBtn" class="icon-btn" title="Sonidos">🔊</button>
+  </div>
+
+  <section id="cover" class="screen active">
+    <div class="cover-card">
+      <h1>LA ODISEA</h1>
+      <div class="subtitle">Ayuda a Odiseo a regresar a Ítaca y reencontrarse con Penélope.</div>
+      <button id="startBtn" class="primary">COMENZAR AVENTURA</button>
+      <div class="small">Episodio 1 · La isla de los lotófagos · 3 niveles</div>
+    </div>
+  </section>
+
+  <section id="intro" class="screen">
+    <video id="introVideo" playsinline preload="metadata" src="assets/intro.mp4"></video>
+    <button id="skipBtn" class="skip">Saltar intro</button>
+  </section>
+
+  <section id="episode" class="screen">
+    <div class="episode-card">
+      <img src="assets/odiseo.webp" alt="Odiseo" />
+      <div class="episode-copy">
+        <h2>Episodio 1</h2><h3>La isla de los lotófagos</h3>
+        <p>En esta isla llueven flores de loto. Si Odiseo toca una, puede olvidar su nombre, su patria y a Penélope. Tendrá que avanzar sin tocarlas y encontrar el camino de regreso al barco.</p>
+        <div class="legend"><span><b class="lotusDot">✿</b> Loto = peligro</span><span><b class="molyDot">✦</b> Moly = puntos</span></div>
+        <p><b>Controles:</b> flechas o WASD. En móvil, usa el control táctil.</p>
+        <button id="episodeBtn" class="primary">EMPEZAR NIVEL 1</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="screen">
+    <div id="gameWrap">
+      <canvas id="canvas" width="1280" height="720"></canvas>
+      <div id="hud"><div id="levelLabel" class="hudbox">Nivel 1</div><div id="scoreLabel" class="hudbox">Moly: 0 puntos</div><div id="timeLabel" class="hudbox">02:00</div></div>
+      <div id="message"></div>
+      <div id="touch"><div class="dpad"><button class="up" data-key="ArrowUp">▲</button><button class="down" data-key="ArrowDown">▼</button><button class="left" data-key="ArrowLeft">◀</button><button class="right" data-key="ArrowRight">▶</button></div></div>
+    </div>
+  </section>
+
+  <section id="treasure" class="screen">
+    <div class="treasure-card">
+      <div class="chest">🧰</div>
+      <h2>¡Episodio superado!</h2>
+      <h3>🧭 Brújula de Ítaca</h3>
+      <p>Odiseo conserva el recuerdo de su hogar y obtiene una brújula para continuar su viaje.</p>
+      <div id="finalscore"></div>
+      <p>Prototipo del Episodio 1 completado.</p>
+      <button id="againBtn" class="primary">VOLVER A JUGAR</button>
+    </div>
+  </section>
+</div>
+<audio id="music" src="assets/musica.mp3" loop preload="auto"></audio>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const screens=$$('.screen'); function show(id){screens.forEach(s=>s.classList.remove('active')); $('#'+id).classList.add('active')}
+let musicOn=true,soundOn=true; const music=$('#music'); music.volume=.28;
+function syncAudioBtns(){ $('#musicBtn').textContent=musicOn?'🎵':'🚫'; $('#soundBtn').textContent=soundOn?'🔊':'🔇'; }
+$('#musicBtn').onclick=()=>{musicOn=!musicOn; if(musicOn&&$('#game').classList.contains('active')) music.play().catch(()=>{}); else music.pause(); syncAudioBtns()}
+$('#soundBtn').onclick=()=>{soundOn=!soundOn; $('#introVideo').muted=!soundOn; syncAudioBtns()}
+function beep(freq=700,d=.08,vol=.04){if(!soundOn)return; const A=window.AudioContext||window.webkitAudioContext; if(!A)return; const ac=beep.ac||(beep.ac=new A()); const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}
+
+$('#startBtn').onclick=()=>{show('intro'); music.pause(); const v=$('#introVideo'); v.muted=!soundOn; v.currentTime=0; v.play().catch(()=>showEpisode())}
+$('#skipBtn').onclick=showEpisode; $('#introVideo').onended=showEpisode;
+function showEpisode(){ $('#introVideo').pause(); show('episode'); }
+$('#episodeBtn').onclick=()=>{show('game'); if(musicOn){music.currentTime=0;music.play().catch(()=>{})} startGame()}
+$('#againBtn').onclick=()=>{score=0;show('episode')}
+
+const canvas=$('#canvas'),ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height; const keys={};
+addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault()},{passive:false});addEventListener('keyup',e=>keys[e.key]=false);
+$$('#touch button').forEach(b=>{const k=b.dataset.key; const on=e=>{e.preventDefault();keys[k]=true},off=e=>{e.preventDefault();keys[k]=false};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)});
+
+let level=1,score=0,timeLeft=120,last=0,running=false,player,lotuses,molys,rocks,mud,logs,lotophagi,particles,spawnT,molyT,scrollY,wind=0,flash=0;
+function rand(a,b){return a+Math.random()*(b-a)} function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function startGame(){level=1;score=0;setupLevel();running=true;last=performance.now();requestAnimationFrame(loop)}
+function setupLevel(){timeLeft=120; player={x:W/2,y:H*.78,r:24,speed:285,stun:0};lotuses=[];molys=[];rocks=[];mud=[];logs=[];lotophagi=[];particles=[];spawnT=0;molyT=0;scrollY=0;wind=0;flash=0; $('#levelLabel').textContent=`Nivel ${level} · ${['Lluvia de loto','El río de los lotófagos','Tormenta de loto'][level-1]}`; $('#scoreLabel').textContent=`Moly: ${score} puntos`; $('#message').style.display='none'; createScenery()}
+function createScenery(){for(let i=0;i<18;i++)rocks.push({x:rand(40,W-40),y:rand(0,H),r:rand(16,36)}); if(level===1){for(let i=0;i<6;i++)mud.push({x:rand(80,W-80),y:rand(0,H),w:rand(90,190),h:rand(50,90)})} if(level>=2){for(let i=0;i<4;i++)logs.push({x:rand(0,W),y:rand(160,H-120),vx:rand(75,135)*(Math.random()<.5?-1:1),w:110,h:26});} if(level===3){for(let i=0;i<5;i++)lotophagi.push({x:rand(80,W-80),y:rand(80,H-80),vx:rand(-55,55),r:26})}}
+function lotusSpawnRate(){return level===1?.75:level===2?.58:.38}
+function spawnLotus(){let x=rand(30,W-30);lotuses.push({x,y:-30,r:17,vy:level===1?rand(125,190):level===2?rand(165,225):rand(200,285),vx:level===3?rand(-90,90):rand(-20,20),spin:rand(0,6.28)})}
+function spawnMoly(){molys.push({x:rand(40,W-40),y:-30,r:15,vy:105,p:rand(0,6.28)})}
+function hit(a,b){let dx=a.x-b.x,dy=a.y-b.y,rr=(a.r||20)+(b.r||20);return dx*dx+dy*dy<rr*rr}
+function lotusHit(){if(player.stun>0)return;player.stun=1.25;flash=1;beep(170,.22,.07); $('#message').innerHTML='¿Dónde estoy?<br><small>¡Cuidado con el loto!</small>';$('#message').style.display='block';setTimeout(()=>$('#message').style.display='none',850);player.x=W/2;player.y=H*.79; lotuses=lotuses.filter(l=>l.y<250)}
+function update(dt){if(!running)return;timeLeft-=dt;if(timeLeft<=0){endLevel();return}player.stun=Math.max(0,player.stun-dt);flash=Math.max(0,flash-dt*2.5);scrollY=(scrollY+80*dt)%90;
+  let dx=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0),dy=(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0); let mag=Math.hypot(dx,dy)||1;let speed=player.speed*(player.stun>0?.35:1); if(level===1 && mud.some(m=>player.x>m.x-m.w/2&&player.x<m.x+m.w/2&&player.y>m.y-m.h/2&&player.y<m.y+m.h/2))speed*=.55;player.x=clamp(player.x+dx/mag*speed*dt,25,W-25);player.y=clamp(player.y+dy/mag*speed*dt,90,H-25);
+  spawnT-=dt;if(spawnT<=0){spawnLotus();spawnT=lotusSpawnRate()*rand(.72,1.15)}molyT-=dt;if(molyT<=0){spawnMoly();molyT=rand(1.4,2.2)} if(level===3)wind=Math.sin(performance.now()/950)*85;
+  lotuses.forEach(l=>{l.x+=((l.vx)+(level===3?wind:0))*dt;l.y+=l.vy*dt;l.spin+=dt*3});lotuses=lotuses.filter(l=>l.y<H+50&&l.x>-60&&l.x<W+60);
+  molys.forEach(m=>{m.y+=m.vy*dt;m.p+=dt*4});molys=molys.filter(m=>m.y<H+40);
+  logs.forEach(o=>{o.x+=o.vx*dt;if(o.x<-o.w)o.x=W+o.w;if(o.x>W+o.w)o.x=-o.w}); lotophagi.forEach(o=>{o.x+=o.vx*dt;if(o.x<40||o.x>W-40)o.vx*=-1});
+  lotuses.forEach(l=>{if(hit(player,l)){l.y=H+100;lotusHit()}});molys.forEach(m=>{if(hit(player,m)){m.y=H+100;score+=100;beep(900,.06,.035);$('#scoreLabel').textContent=`Moly: ${score} puntos`;for(let i=0;i<8;i++)particles.push({x:m.x,y:m.y,vx:rand(-70,70),vy:rand(-100,-20),life:.6})}});
+  if(level===2){logs.forEach(o=>{if(Math.abs(player.y-o.y)<28&&Math.abs(player.x-o.x)<o.w/2+18){player.x=clamp(player.x+o.vx*dt,25,W-25)}})}
+  if(level===3){lotophagi.forEach(o=>{if(hit(player,o))lotusHit()})}
+  particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt});particles=particles.filter(p=>p.life>0);
+  $('#timeLabel').textContent=`${String(Math.max(0,Math.ceil(timeLeft/60))).padStart(2,'0')}:${String(Math.max(0,Math.ceil(timeLeft)%60)).padStart(2,'0')}`;
+}
+function endLevel(){running=false;beep(520,.15,.05);if(level<3){$('#message').innerHTML=`¡Nivel ${level} superado!<br><small>Prepárate para el siguiente desafío.</small>`;$('#message').style.display='block';setTimeout(()=>{level++;setupLevel();running=true;last=performance.now();requestAnimationFrame(loop)},1500)}else{music.pause();$('#finalscore').textContent=`Puntuación: ${score} puntos de moly`;show('treasure')}}
+function drawFlower(x,y,r,danger=true,spin=0){ctx.save();ctx.translate(x,y);ctx.rotate(spin);for(let i=0;i<6;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.ellipse(0,-r*.7,r*.38,r*.75,0,0,Math.PI*2);ctx.fillStyle=danger?'#f5a4c0':'#f8f6e9';ctx.fill();ctx.strokeStyle=danger?'#b83d67':'#c9c2a7';ctx.lineWidth=2;ctx.stroke()}ctx.beginPath();ctx.arc(0,0,r*.35,0,Math.PI*2);ctx.fillStyle=danger?'#f3d24f':'#20251f';ctx.fill();ctx.restore()}
+function drawHero(){ctx.save();ctx.translate(player.x,player.y); if(player.stun>0)ctx.globalAlpha=.65+.25*Math.sin(performance.now()/60);ctx.fillStyle='#123870';ctx.beginPath();ctx.ellipse(0,14,28,36,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f2e4c4';ctx.beginPath();ctx.ellipse(0,-5,22,28,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4a2b1b';ctx.beginPath();ctx.arc(0,-22,17,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d5a231';ctx.beginPath();ctx.arc(0,3,5,0,Math.PI*2);ctx.fill();ctx.restore()}
+function drawBackground(){let grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,level===3?'#739a72':'#99cc82');grad.addColorStop(1,level===3?'#355f54':'#5c9d67');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H); ctx.globalAlpha=.13;ctx.fillStyle='#244f42';for(let y=-90+scrollY;y<H;y+=90){for(let x=20;x<W;x+=100){ctx.beginPath();ctx.arc(x+(y%180?30:0),y,6,0,6.28);ctx.fill()}}ctx.globalAlpha=1;
+ if(level>=2){ctx.fillStyle='#397fb1';ctx.fillRect(0,H*.42,W,120);ctx.globalAlpha=.22;ctx.strokeStyle='#c9f4ff';ctx.lineWidth=5;for(let x=-100;x<W;x+=130){ctx.beginPath();ctx.moveTo(x,H*.45);ctx.quadraticCurveTo(x+40,H*.48,x+95,H*.45);ctx.stroke()}ctx.globalAlpha=1}
+ if(level===3){ctx.globalAlpha=.18;ctx.fillStyle='#d8eef0';for(let i=0;i<7;i++)ctx.fillRect((i*210+(performance.now()/7)%210)-200,0,18,H);ctx.globalAlpha=1}}
+function draw(){drawBackground();mud.forEach(m=>{ctx.fillStyle='#7a6947aa';ctx.beginPath();ctx.ellipse(m.x,m.y,m.w/2,m.h/2,0,0,6.28);ctx.fill()});rocks.forEach(r=>{ctx.fillStyle='#667566';ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,6.28);ctx.fill();ctx.fillStyle='#839284';ctx.beginPath();ctx.arc(r.x-r.r*.22,r.y-r.r*.22,r.r*.42,0,6.28);ctx.fill()});logs.forEach(o=>{ctx.fillStyle='#76512d';ctx.fillRect(o.x-o.w/2,o.y-o.h/2,o.w,o.h);ctx.strokeStyle='#51361f';ctx.strokeRect(o.x-o.w/2,o.y-o.h/2,o.w,o.h)});lotophagi.forEach(o=>{ctx.fillStyle='#d3b06b';ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,6.28);ctx.fill();ctx.fillStyle='#7a4c77';ctx.beginPath();ctx.arc(o.x,o.y-5,14,0,6.28);ctx.fill();drawFlower(o.x+23,o.y-10,10,true,0)});molys.forEach(m=>drawFlower(m.x,m.y,m.r,false,m.p));lotuses.forEach(l=>drawFlower(l.x,l.y,l.r,true,l.spin));drawHero();particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/.6);ctx.fillStyle='#fff9c3';ctx.beginPath();ctx.arc(p.x,p.y,4,0,6.28);ctx.fill()});ctx.globalAlpha=1;if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.23})`;ctx.fillRect(0,0,W,H)}}
+function loop(t){if(!$('#game').classList.contains('active'))return;let dt=Math.min(.033,(t-last)/1000||0);last=t;update(dt);draw();if(running)requestAnimationFrame(loop)}
+syncAudioBtns();
+</script>
+</body>
+</html>
